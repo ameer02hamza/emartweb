@@ -40,7 +40,7 @@ function NavBar() {
                 <Link href={"/home"} className='hover:underline'>
                 Home
                 </Link>
-                <Link href={"/home"} className='hover:underline'>
+                <Link href={"/shop"} className='hover:underline'>
                 Shop
                 </Link>
                 <Link href={"/home"} className='hover:underline'>
