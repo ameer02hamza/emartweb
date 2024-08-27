@@ -1,8 +1,18 @@
 import { productType } from '@/interfaces/card.type'
+import { addToCart } from '@/redux/features/cart/cartSlice';
 import React from 'react'
 import { FaStar } from 'react-icons/fa'
+import { useDispatch } from 'react-redux';
 
 function ProductCard({ product }: { product: productType }) {
+    const dispatch = useDispatch();
+    const handleAddToCart = (e: any, product: productType) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(
+            addToCart(product)
+        );
+    }
     return (
         <div className='bg-white p-4 border mb-4 rounded-lg shadow-md w-full max-w-max
                      transform transition-transform duration-300
@@ -15,15 +25,18 @@ function ProductCard({ product }: { product: productType }) {
                 {Array(product.rating)
                     .fill(0)
                     .map((_, i) => (
-
                         <span key={i} className='text-amber-400'><FaStar></FaStar></span>))}
 
             </div>
-            <div className='absolute bottom-4 right-2 flex items-center justify-center w-8 h-8 bg-red-600
-            group text-white text-sm rounded-full hover:w-32 hover:bg-red-600 transition-all duration-500 cursor-pointer'>
+            <button onClick={(e) => handleAddToCart(e, product)}
+                className='absolute bottom-4 right-2 
+            flex items-center
+             justify-center w-8 h-8 bg-red-600
+            group text-white text-sm rounded-full hover:w-32 hover:bg-red-600 
+            transition-all duration-500 cursor-pointer'>
                 <span className='group-hover:hidden text-lg'>+</span>
-                <span className='hidden group-hover:block transition-all duration-75'>Add to Cart</span>
-            </div>
+                <span className='hidden  group-hover:animate-text-reveal delay-1000	 group-hover:animation-fill-mode:backwards group-hover:block'>Add to Cart</span>
+            </button>
         </div>
     )
 }

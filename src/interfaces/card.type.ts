@@ -18,4 +18,5 @@ export interface productType {
     imageUrl: string,
     price: number,
     rating: number,
+    quantity: number
 };
