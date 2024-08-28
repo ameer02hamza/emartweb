@@ -1,13 +1,13 @@
 import { productType } from "@/interfaces/card.type";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface cartStateType {
+export interface cartStateType {
     products: productType[],
     opDone: boolean,
     totalPrice: number
 }
 
-const initState: cartStateType = {
+ const initState: cartStateType = {
     products: [],
     opDone: false,
     totalPrice: 0
@@ -32,17 +32,23 @@ const cartSlice = createSlice({
         },
         removeFromCart: (state, action) => {
             console.log(action.payload.quantity);
-            if(action.payload.quantity>1){
+            if (action.payload.quantity > 1) {
                 state.products[state.products.findIndex(product => product.id === action.payload.id)].quantity -= 1;
             }
-            else{
+            else {
                 state.products = state.products.filter(product => product.id !== action.payload.id);
             }
             state.totalPrice -= action.payload.price;
+            state.opDone = true;
+        },
+        removeProduct: (state, action) => {
+
+            state.products = state.products.filter(product => product.id !== action.payload.id);
+            state.totalPrice -= (action.payload.quantity * action.payload.price);
             state.opDone = true;
         }
     }
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, removeProduct } = cartSlice.actions;
 export default cartSlice;
