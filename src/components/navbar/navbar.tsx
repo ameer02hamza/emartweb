@@ -1,13 +1,25 @@
 "use client";
+import { searchProducts } from "@/redux/features/products/productslice";
 import { RootState } from "@/redux/store/store";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useMemo } from "react";
 import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function NavBar() {
   const addedProducts = useSelector((state: RootState) => state.cart.products);
+  const dispatch = useDispatch();
 
+  const path = usePathname();
+  const navPath = ["/auth/login", "/auth/signup"];
+  const handleSearch = (e: any) => {
+    dispatch(searchProducts(e.target.value));
+  };
+  if (navPath.includes(path)) {
+    return null; // Hide navigation for login and signup pages.  If you want to show them, remove this return statement.
+    //  Don't forget to add links to these pages in the NavBar.tsx file.
+  }
   return (
     <nav className=" w-full bg-white shadow-md">
       <div className="container mx-auto px-4 md:px-16 lg:px-24 py-4 flex justify-between items-center">
@@ -19,6 +31,7 @@ function NavBar() {
             <input
               type="text"
               name="search"
+              onChange={(e) => handleSearch(e)}
               className="w-full border py-4 px-4 rounded-xl"
               placeholder="Search Product"
               id=""
@@ -38,7 +51,7 @@ function NavBar() {
               </span>
             )}
           </Link>
-          <button className="hidden md:block">Login | Register</button>
+          <button className="hidden md:block"><span><Link href={'auth/login'}>Login</Link></span> | <span><Link href={'auth/signup'}>Register</Link></span></button>
 
           <button>
             <FaUser></FaUser>

@@ -31,7 +31,7 @@ export const productsData: productType[] = [
     },
     {
         id: 3,
-        title: "Apple iPhone 14",
+        title: "mac book pro 2021",
         imageUrl: imgIphone,
         price: 800,
         rating: 4,
