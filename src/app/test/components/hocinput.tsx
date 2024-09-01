@@ -23,7 +23,7 @@
 //         {...props}
 //         onChange={handleChange}
 //         showPassword={showPassword}
-//         togglePswd={handlePasswordToggle}
+//         togglepswd={handlePasswordToggle}
 //       />
 //     );
 //   };

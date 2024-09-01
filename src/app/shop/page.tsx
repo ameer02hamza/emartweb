@@ -1,22 +1,28 @@
 "use client";
 import { setProducts } from "@/redux/features/products/productslice";
-import { RootState } from "@/redux/store/store";
+import { AppDispatch, RootState } from "@/redux/store/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productsData } from "../home/components/consts";
 import LoadingIndicator from "@/components/loadingIndicator.component";
 import ProductCard from "@/components/productcard.component";
+import withAuthentication from "@/components/higherordercomponents/authvalidator.hoc";
+import { productsThunk } from "@/redux/features/products/product.thunk";
+import { thunkStatus } from "@/consts/const.values";
 
 function Shop() {
   const productSelector = useSelector((state: RootState) => state.products);
 
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setLoading(productSelector.loading);
-    dispatch(setProducts(productsData));
-  }, [productSelector.loading]);
+  const dispatch = useDispatch<AppDispatch>();
+useEffect(() =>{
+  dispatch(productsThunk());
+},[])
+  useMemo(() => {
+    if(productSelector.status != thunkStatus.loading){
+      setLoading(false)
+    }
+  }, [productSelector.status]);
   return loading ? (
     <LoadingIndicator />
   ) : (
@@ -33,4 +39,4 @@ function Shop() {
   );
 }
 
-export default Shop;
+export default withAuthentication(Shop);

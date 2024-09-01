@@ -1,4 +1,5 @@
 "use client";
+import { logout } from "@/redux/features/auth/login.slice";
 import { searchProducts } from "@/redux/features/products/productslice";
 import { RootState } from "@/redux/store/store";
 import Link from "next/link";
@@ -8,18 +9,28 @@ import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 function NavBar() {
-  const addedProducts = useSelector((state: RootState) => state.cart.products);
-  const dispatch = useDispatch();
-
   const path = usePathname();
   const navPath = ["/auth/login", "/auth/signup"];
-  const handleSearch = (e: any) => {
-    dispatch(searchProducts(e.target.value));
-  };
   if (navPath.includes(path)) {
     return null; // Hide navigation for login and signup pages.  If you want to show them, remove this return statement.
     //  Don't forget to add links to these pages in the NavBar.tsx file.
   }
+  const addedProducts = useSelector((state: RootState) => state.cart.products);
+  const userData = useSelector((state: RootState) => state.login.authResponse);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const handleLogout = () => {
+    try {
+      dispatch(logout());
+      localStorage.removeItem("token");
+      router.push("/auth/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSearch = (e: any) => {
+    dispatch(searchProducts(e.target.value.trim()));
+  };
   return (
     <nav className=" w-full bg-white shadow-md">
       <div className="container mx-auto px-4 md:px-16 lg:px-24 py-4 flex justify-between items-center">
@@ -51,8 +62,10 @@ function NavBar() {
               </span>
             )}
           </Link>
-          <button className="hidden md:block"><span><Link href={'auth/login'}>Login</Link></span> | <span><Link href={'auth/signup'}>Register</Link></span></button>
-
+          <button className="hidden md:block" onClick={handleLogout}>
+            <span>Logout</span> |
+          </button>
+          <span>{userData.firstName + " " + userData.lastName}</span>
           <button>
             <FaUser></FaUser>
           </button>

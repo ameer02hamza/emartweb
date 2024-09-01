@@ -6,8 +6,7 @@ import WithInputValidation from "./higherordercomponents/input.hoc";
  * @param  {label} label required
  * @param  {placeholder} placeholder required
  */
-function InputField(props: any) {
-  
+function InputField({ togglepswd, ...props }: any) {
   return (
     <div className="max-w-sm">
       <label className="block text-sm ">{props.label}</label>
@@ -18,7 +17,7 @@ function InputField(props: any) {
              placeholder-gray-500 text-sm focus:outline-dashed focus:bg-white `}
           type={
             props.type == "password"
-              ? props.showpassword
+              ? props.showpassword == 1
                 ? "text"
                 : "password"
               : props.type
@@ -27,7 +26,7 @@ function InputField(props: any) {
         />
         {props.type == "password" ? (
           <button
-            onClick={props.togglePswd}
+            onClick={togglepswd}
             type="button"
             data-hs-toggle-password='{"target": "#hs-toggle-password"}'
             className="absolute 

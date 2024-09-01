@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/modal.component";
-import { imgEmptyCart } from "@/consts/images";
+import { imgEmptyCart } from "@/consts/images.const";
 import { productType } from "@/interfaces/card.type";
 import {
   addToCart,
@@ -13,6 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import ChangeAddress from "./component/changeAddress.component";
 import { useRouter } from "next/navigation";
+import withAuthentication from "@/components/higherordercomponents/authvalidator.hoc";
 
 function Cart() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -21,8 +22,6 @@ function Cart() {
   const dispatch = useDispatch();
   const router = useRouter();
   const handleRemoveFromCart = (e: any, product: productType) => {
-    console.log(typeof e);
-
     e.preventDefault();
     e.stopPropagation();
     dispatch(removeProduct(product));
@@ -198,4 +197,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default withAuthentication(Cart);

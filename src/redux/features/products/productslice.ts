@@ -1,15 +1,17 @@
-import { productType } from "@/interfaces/card.type";
+import { ProductsType } from "@/interfaces/product.type";
 import { createSlice } from "@reduxjs/toolkit";
+import { productsThunk } from "./product.thunk";
+import { thunkStatus } from "@/consts/const.values";
 
 interface productStateType {
-  products: productType[];
-  loading: boolean;
+  products: ProductsType[];
+  status: thunkStatus;
   searchTerm: "";
-  filteredProducts: productType[];
+  filteredProducts: ProductsType[];
 }
 const initState: productStateType = {
   products: [],
-  loading: true,
+  status: thunkStatus.initial,
   searchTerm: "",
   filteredProducts: [],
 };
@@ -19,10 +21,10 @@ const productSlice = createSlice({
   name: "products",
   reducers: {
     setProducts: (state, action) => {
-      state.loading = true;
-      state.products = action.payload;
-      state.filteredProducts = action.payload;
-      state.loading = false;
+      // state.status = true;
+      // state.products = action.payload;
+      // state.filteredProducts = action.payload;
+      state.status = thunkStatus.initial;
     },
     searchProducts: (state, action) => {
       state.searchTerm = action.payload;
@@ -35,7 +37,23 @@ const productSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(productsThunk.pending, (state, action) => {
+      state.status = thunkStatus.loading;
+    }),
+      builder.addCase(productsThunk.fulfilled, (state, action) => {
+        const product = action.payload as any;
+        state.products = product['products'];
+        state.filteredProducts = product['products'];
+        state.status = thunkStatus.fulfilled;
+      }),
+      builder.addCase(productsThunk.rejected, (state, action) => {
+        console.log("rejected", action.payload);
+        state.status = thunkStatus.rejected;
+        state.status = thunkStatus.rejected;
+      });
+  },
 });
 
-export const { setProducts, searchProducts} = productSlice.actions;
+export const { setProducts, searchProducts } = productSlice.actions;
 export default productSlice;

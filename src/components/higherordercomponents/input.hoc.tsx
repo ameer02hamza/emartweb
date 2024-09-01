@@ -10,19 +10,19 @@ import React from "react";
  * @param  {placeholder} placeholder required
  * @returns {function} WithInputValidation
  */
-const WithInputValidation = (WrappedComponent: any) => {
+const WithInputValidation = (WrappedComponent: React.ComponentType) => {
   return function WithInputValidation(props: any) {
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(0);
     const [field, meta] = useField(props.name);
     const handlePasswordToggle = () => {
-      setShowPassword(!showPassword);
+      setShowPassword(showPassword == 0 ? 1 : 0);
     };
     return (
       <WrappedComponent
         {...field}
         {...props}
         showpassword={showPassword}
-        togglePswd={handlePasswordToggle}
+        togglepswd={handlePasswordToggle}
       />
     );
   };

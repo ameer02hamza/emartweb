@@ -23,7 +23,7 @@ function InputTestField(props: any) {
         />
         {props.type == "password" ? (
           <button
-            onClick={props.togglePswd}
+            onClick={props.togglepswd}
             type="button"
             data-hs-toggle-password='{"target": "#hs-toggle-password"}'
             className="absolute 

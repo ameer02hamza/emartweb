@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { homeCategories, productsData } from "./components/consts";
-import { imgBanner } from "@/consts/images";
+import { imgBanner } from "@/consts/images.const";
 import InfoCards from "@/components/infocards.component";
 import CategoriesCard from "@/components/categorycard.component";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,15 +10,13 @@ import { setProducts } from "@/redux/features/products/productslice";
 import LoadingIndicator from "@/components/loadingIndicator.component";
 import ProductCard from "@/components/productcard.component";
 import Shop from "../shop/page";
+import withAuthentication from "@/components/higherordercomponents/authvalidator.hoc";
 
 function HomeScreen() {
   const productSelector = useSelector((state: RootState) => state.products);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("productsData =", productSelector.loading);
-    console.log("running");
-
     setLoading(productSelector.loading);
     dispatch(setProducts(productsData));
   }, [productSelector.loading]);
@@ -83,4 +81,4 @@ function HomeScreen() {
   );
 }
 
-export default HomeScreen;
+export default withAuthentication(HomeScreen);

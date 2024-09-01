@@ -1,21 +1,43 @@
 "use client";
+import withAuthentication from "@/components/higherordercomponents/authvalidator.hoc";
 import InputFormField from "@/components/inputfield.compnent";
-import { imgAuthBanner } from "@/consts/images";
+import LoadingSpinner from "@/components/loadingspinner.component";
+import { thunkStatus } from "@/consts/const.values";
+import { imgAuthBanner } from "@/consts/images.const";
+import { LoginType } from "@/interfaces/auth.type";
+import { loginThunk } from "@/redux/features/auth/auth.thunk";
+import { AppDispatch, RootState } from "@/redux/store/store";
 import { Form, Formik } from "formik";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { redirect, useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 function LoginPage() {
   const router = useRouter();
-
-  // console.log(watch("email")); // watch input value by passing the name of it
-  const handleLogin = () => {
-    console.log("login");
-    router.push("/home");
+  const [isBtnLoading, setIsBtnLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const loginState = useSelector((state: RootState) => state.login);
+  const initValues: LoginType = {
+    username: "",
+    password: "",
   };
-  const DisplayingErrorMessagesSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
+
+  const handleLogin = (values: LoginType) => {
+    setIsBtnLoading(true);
+    dispatch(loginThunk(values));
+  };
+  useEffect(() => {
+    if (loginState.status != thunkStatus.loading) {
+      setIsBtnLoading(false);
+    }
+    if (loginState.authResponse.token != "") {
+      localStorage.setItem("token", loginState.authResponse.token);
+     router.push("/home");
+    }
+  }, [loginState.status, loginState.authResponse]);
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("username is required"),
     password: Yup.string().required("Password is required"),
   });
   return (
@@ -69,28 +91,23 @@ function LoginPage() {
                 </div>
               </div>
               <Formik
-                initialValues={{
-                  email: "",
-                  password: "",
-                }}
-                validationSchema={DisplayingErrorMessagesSchema}
-                onSubmit={(values) => {
-                  // same shape as initial values
-
-                  console.log(values);
-                }}
+                initialValues={initValues}
+                validationSchema={validationSchema}
+                onSubmit={handleLogin}
               >
                 {({ errors, touched }) => (
                   <Form>
                     <div className="mx-auto max-w-xs">
                       <InputFormField
-                        label="Email"
-                        type="email"
-                        placeholder="Email"
-                        name="email"
+                        label="username"
+                        type="username"
+                        placeholder="username"
+                        name="username"
                       />
-                      {touched.email && errors.email && (
-                        <div className="text-red-500 mb-2">{errors.email}</div>
+                      {touched.username && errors.username && (
+                        <div className="text-red-500 mb-2">
+                          {errors.username}
+                        </div>
                       )}
                       <InputFormField
                         label="Password"
@@ -98,29 +115,37 @@ function LoginPage() {
                         type="password"
                         placeholder="Password"
                       />
-                         {touched.password && errors.password && (
-                        <div className="text-red-500 mb-2">{errors.password}</div>
+                      {touched.password && errors.password && (
+                        <div className="text-red-500 mb-2">
+                          {errors.password}
+                        </div>
                       )}
-                      <button
-                        type="submit"
-                        className="mt-5 tracking-wide font-semibold bg-red-600 text-gray-100 w-full py-4 rounded-lg
+                      {isBtnLoading ? (
+                        <div className="content-center">
+                          <LoadingSpinner />
+                        </div>
+                      ) : (
+                        <button
+                          type="submit"
+                          className="mt-5 tracking-wide font-semibold bg-red-600 text-gray-100 w-full py-4 rounded-lg
                  hover:bg-red-700 transition-all duration-300 ease-in-out flex items-center justify-center
                   focus:shadow-outline focus:outline-none"
-                      >
-                        <svg
-                          className="w-6 h-6 -ml-2"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
                         >
-                          <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                          <circle cx="8.5" cy="7" r="4" />
-                          <path d="M20 8v6M23 11h-6" />
-                        </svg>
-                        <span className="ml-3">Login</span>
-                      </button>
+                          <svg
+                            className="w-6 h-6 -ml-2"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="8.5" cy="7" r="4" />
+                            <path d="M20 8v6M23 11h-6" />
+                          </svg>
+                          <span className="ml-3">Login</span>
+                        </button>
+                      )}
                       <div className="my-12 border-b text-center">
                         <div
                           className="leading-none px-2 inline-block 
@@ -169,4 +194,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default LoginPage; //withAuthentication(LoginPage); ;

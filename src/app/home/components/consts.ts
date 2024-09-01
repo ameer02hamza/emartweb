@@ -1,4 +1,4 @@
-import { imgIphone } from "@/consts/images"
+import { imgIphone } from "@/consts/images.const"
 import { productType } from "@/interfaces/card.type"
 
 export const homeCategories = [

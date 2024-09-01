@@ -10,7 +10,6 @@ import InputTestField from "./components/inputfield";
 function TestPage() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log;
   };
   return (
     <div className="h-screen w-screen grid place-content-center">
