@@ -5,21 +5,27 @@ import { imgBanner } from "@/consts/images.const";
 import InfoCards from "@/components/infocards.component";
 import CategoriesCard from "@/components/categorycard.component";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
+import { AppDispatch, RootState } from "@/redux/store/store";
 import { setProducts } from "@/redux/features/products/productslice";
 import LoadingIndicator from "@/components/loadingIndicator.component";
 import ProductCard from "@/components/productcard.component";
 import Shop from "../shop/page";
 import withAuthentication from "@/components/higherordercomponents/authvalidator.hoc";
+import { thunkStatus } from "@/consts/const.values";
+import { productsThunk } from "@/redux/features/products/product.thunk";
 
 function HomeScreen() {
   const productSelector = useSelector((state: RootState) => state.products);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    setLoading(productSelector.loading);
-    dispatch(setProducts(productsData));
-  }, [productSelector.loading]);
+    if (productSelector.status != thunkStatus.loading) {
+      setLoading(false);
+    }
+  }, [productSelector.status]);
+  useEffect(() => {
+    dispatch(productsThunk());
+  }, []);
   return loading ? (
     <LoadingIndicator />
   ) : (

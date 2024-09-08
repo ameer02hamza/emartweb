@@ -9,11 +9,8 @@ const withAuthentication = (Component: React.ComponentType) => {
     const token = localStorage.getItem("token");
     useEffect(() => {
       if (!token) {
-        router.push("/auth/login");
-      } 
-      // else {
-      //   router.push("/home");
-      // }
+        router.push("/en/auth/login");
+      }
     }, []);
     if (!token) {
       return <LoadingIndicator />;

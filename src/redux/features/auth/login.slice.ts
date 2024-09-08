@@ -2,7 +2,6 @@ import { LoginResponse, LoginType } from "@/interfaces/auth.type";
 import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk } from "./auth.thunk";
 import { thunkStatus } from "@/consts/const.values";
-import { redirect } from "next/navigation";
 
 interface AuthType {
   authResponse: LoginResponse;

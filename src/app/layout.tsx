@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ReduxProvider } from "@/redux/store/redux.provider";
-import NavBar from "@/components/navbar/navbar";
-import Footer from "@/components/footer.component";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +16,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ReduxProvider>
-          <NavBar />
-          {children}
-          {/* <Footer /> */}
-        </ReduxProvider>
+    // {inter.className}
+    <html>
+      <body
+        className="bg-gray-100 dark:bg-zinc-900 transition-all
+      duration-700"
+        suppressHydrationWarning={true}
+      >
+        {children}
       </body>
     </html>
   );

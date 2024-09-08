@@ -1,16 +1,18 @@
-import { ProductsType } from "@/interfaces/product.type";
+import { productInitState, ProductsType } from "@/interfaces/product.type";
 import { createSlice } from "@reduxjs/toolkit";
 import { productsThunk } from "./product.thunk";
 import { thunkStatus } from "@/consts/const.values";
 
 interface productStateType {
   products: ProductsType[];
+  detailProduct: ProductsType;
   status: thunkStatus;
   searchTerm: "";
   filteredProducts: ProductsType[];
 }
 const initState: productStateType = {
   products: [],
+  detailProduct: productInitState,
   status: thunkStatus.initial,
   searchTerm: "",
   filteredProducts: [],
@@ -21,9 +23,7 @@ const productSlice = createSlice({
   name: "products",
   reducers: {
     setProducts: (state, action) => {
-      // state.status = true;
-      // state.products = action.payload;
-      // state.filteredProducts = action.payload;
+      state.detailProduct = action.payload;
       state.status = thunkStatus.initial;
     },
     searchProducts: (state, action) => {
@@ -43,8 +43,8 @@ const productSlice = createSlice({
     }),
       builder.addCase(productsThunk.fulfilled, (state, action) => {
         const product = action.payload as any;
-        state.products = product['products'];
-        state.filteredProducts = product['products'];
+        state.products = product["products"];
+        state.filteredProducts = product["products"];
         state.status = thunkStatus.fulfilled;
       }),
       builder.addCase(productsThunk.rejected, (state, action) => {
